@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN"><head><base href="./GitHub-Pages%E5%8F%91%E5%B8%83%E5%8C%85/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="基于 Olist 公开历史订单的区域运营分析、需求预测与配送网点规划演示。"><title>域商运营 · 区域履约工作台</title><link rel="stylesheet" href="./style.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="../"><span class="brand-mark">域</span><span>域商运营<small>FULFILLMENT STUDIO</small></span></a>
+  <p class="nav-label">运营工作台</p>
+  <nav aria-label="主导航">
+    <button class="nav-item active" data-page="overview"><span>◫</span>业务概览</button>
+    <button class="nav-item" data-page="delivery"><span>≡</span>履约排查</button>
+    <button class="nav-item" data-page="planning"><span>⌖</span>网点规划</button>
+    <button class="nav-item" data-page="forecast"><span>⌁</span>需求预测</button>
+  </nav>
+  <div class="sidebar-bottom"><span class="live-dot"></span> 在线公开演示<p>Olist 公开订单数据<br>圣保罗 · 24 个服务分区</p><span class="simulation-tag">企业场景模拟项目</span></div>
+</aside>
+<main>
+  <header class="topbar"><span>运营管理 <span class="slash">/</span> <span id="breadcrumb">业务概览</span></span><div class="topbar-right"><span class="history-badge">历史数据回放</span><span class="avatar">OP</span></div></header>
+  <div class="workspace">
+    <div class="page-heading"><div><p class="eyebrow">REGIONAL OPERATIONS</p><h1 id="page-title">区域履约运营概览</h1><p id="page-description">从订单分布到服务覆盖，为每周运营决策提供依据。</p></div><button class="button secondary" id="definitions-button">指标口径 ⓘ</button></div>
+    <div class="data-notice"><span>●</span> 2017—2018 年公开数据 · 用于运营分析与规划回放 <span class="notice-right" id="data-count">正在连接数据…</span></div>
+    <section class="filter-bar" id="global-filters" aria-label="订单筛选">
+      <label>开始日期<input id="start-date" type="date" value="2018-07-02" min="2017-01-02" max="2018-08-26"></label>
+      <label>结束日期<input id="end-date" type="date" value="2018-07-29" min="2017-01-02" max="2018-08-26"></label>
+      <label class="zone-filter">服务分区<select id="zone-filter"><option value="-1">全部区域</option></select></label>
+      <button class="button primary" id="apply-filters">更新分析</button><button class="text-button" id="reset-filters">重置</button>
+    </section>
+    <div id="error-banner" class="error-banner" role="alert" hidden></div>
+    <section id="view-overview" class="page-view">
+      <div class="kpi-grid" id="kpi-cards"></div>
+      <div class="overview-grid">
+        <section class="panel map-panel"><div class="panel-heading"><div><h2>订单分布与服务区域</h2><p>点击区域查看订单与履约表现</p></div><span class="pill">São Paulo</span></div><div id="overview-map" class="map-container"></div><div class="map-caption"><span><i class="legend-dot"></i> 订单需求代表点</span><span>坐标示意 · 圆点大小表示订单量</span></div></section>
+        <section class="panel issues-panel"><div class="panel-heading"><div><h2>本期运营关注</h2><p>按逾期率排序，优先人工排查</p></div><span class="pill amber">待跟进</span></div><div id="issue-list"></div><div class="panel-note">至少 20 单有效送达记录。区域差异用于定位问题，不能直接解释为网点不足。</div><button id="go-delivery" class="button secondary full-width">查看逾期订单 →</button></section>
+      </div>
+      <section class="panel trend-panel"><div class="panel-heading"><div><h2>订单趋势</h2><p>筛选窗口内按下单周汇总</p></div><span class="chart-key"><i></i> 下单量</span></div><div id="order-chart"></div></section>
+    </section>
+    <section id="view-delivery" class="page-view" hidden>
+      <section class="panel"><div class="panel-heading"><div><h2>订单履约排查</h2><p id="order-count">正在读取订单…</p></div><div class="inline-controls"><label class="checkbox-label"><input type="checkbox" id="late-only">只看逾期</label><button id="export-orders" class="button secondary">导出 CSV ↓</button></div></div><div class="table-scroll"><table><thead><tr><th>订单编号</th><th>下单日期</th><th>服务区</th><th>商品金额 R$</th><th>送达天数</th><th>履约状态</th></tr></thead><tbody id="orders-body"></tbody></table></div><div class="pagination"><span id="pagination-info"></span><div><button class="button secondary compact" id="prev-page">上一页</button><button class="button secondary compact" id="next-page">下一页</button></div></div></section>
+      <div class="method-note"><strong>排查建议</strong><p>先核对订单承诺日期、实际送达时间与区域样本量，再联系对应商家或承运环节。这里展示的是事后履约记录，并非下单时的风险预测。</p></div>
+    </section>
+    <section id="view-planning" class="page-view" hidden>
+      <section class="planning-controls panel"><div class="panel-heading"><div><h2>网点预算与需求场景</h2><p>在相同候选点中比较不同布局</p></div><span class="pill">4 周规划周期</span></div><div class="planning-form"><label>历史回放窗口<select id="planning-origin"><option value="2018-07-02">07.02 — 07.29</option><option value="2018-07-30">07.30 — 08.26</option></select></label><label>网点数量<select id="site-budget"></select></label><label>选址方法<select id="planning-method"><option value="forecast">预测需求优化</option><option value="historical">近 8 周需求优化</option><option value="hotspot">订单热点选址</option></select></label></div></section>
+      <div class="plan-kpis" id="plan-kpis"></div>
+      <div class="planning-grid"><section class="panel"><div class="panel-heading"><div><h2>服务覆盖方案</h2><p id="plan-subtitle">选择预算查看方案</p></div><span class="pill green">球面直线距离</span></div><div id="planning-map" class="map-container"></div><div class="map-caption"><span><i class="legend-square"></i> 候选服务点</span><span>连接线表示最近分配关系</span></div></section><section class="panel"><div class="panel-heading"><div><h2>区域重点保障</h2><p>提高某个分区的规划权重并保存方案</p></div></div><label class="block-label">重点区域<select id="priority-zone"><option value="-1">不设置重点区域</option></select></label><label class="block-label">需求权重 <span id="factor-value">1.5 倍</span><input id="priority-factor" type="range" min="1" max="3" step="0.25" value="1.5"></label><label class="block-label">方案名称<input id="scenario-name" value="运营评审方案" maxlength="80"></label><button class="button primary full-width" id="save-scenario">计算并保存方案</button><div id="save-status" class="save-status" role="status"></div><div class="saved-heading">已保存方案 · 当前浏览器</div><div id="saved-scenarios" class="saved-list"></div></section></div>
+      <section class="panel"><div class="panel-heading"><div><h2>相同预算下的方案对比</h2><p>使用对应窗口真实订单坐标回放评价</p></div></div><div class="table-scroll"><table><thead><tr><th>方案</th><th>平均最近距离</th><th>90 分位距离</th><th>3 公里覆盖</th><th>5 公里覆盖</th></tr></thead><tbody id="plan-comparison"></tbody></table></div></section>
+      <div class="method-note"><strong>如何理解结果</strong><p>候选点是训练期邮编代表坐标，未核验物业。模型未加入路网、容量、租金或车辆约束；距离和覆盖率用于方案比较，不能换算为真实配送时间与节省金额。</p></div>
+    </section>
+    <section id="view-forecast" class="page-view" hidden>
+      <div class="model-banner"><div><span class="pill green">验证集选定</span><h2 id="selected-model">正在读取模型</h2><p id="model-detail"></p></div><div><span>评价单元</span><strong>24 区域 × 8 周</strong><small>测试集按时间留出</small></div></div>
+      <section class="panel"><div class="panel-heading"><div><h2>预测方法比较</h2><p>参数在测试前固定，以验证期 WAPE 选择上线候选</p></div><span class="pill">误差越低越好</span></div><div class="table-scroll"><table><thead><tr><th>方法</th><th>验证 WAPE</th><th>测试 WAPE</th><th>测试 MAE</th><th>测试偏差</th><th>选用状态</th></tr></thead><tbody id="forecast-comparison"></tbody></table></div></section>
+      <section class="panel trend-panel"><div class="panel-heading"><div><h2>测试期总需求与预测</h2><p>每 4 周重新读取已知历史；模型参数保持固定</p></div><span class="chart-key"><i></i> 实际 <i class="forecast-line"></i> 预测</span></div><div id="forecast-chart"></div></section>
+      <div class="method-note"><strong>运营解读</strong><p id="forecast-explanation"></p></div>
+    </section>
+    <footer><span>域商运营 · 公开数据企业场景实践</span><span>数据：Olist · 企业场景模拟 · 非真实企业任职记录</span></footer>
+  </div>
+</main>
+<dialog id="definitions"><div class="dialog-heading"><h2>指标口径</h2><button id="close-definitions" aria-label="关闭">×</button></div><dl><dt>下单量</dt><dd>一单一行，包含之后被取消的记录；不代表已发货量。</dd><dt>商品金额</dt><dd>订单商品价格之和，币种 BRL；不包含运费，不代表净收入或已收款。</dd><dt>逾期率</dt><dd>实际送达自然日晚于承诺送达日的订单数 ÷ 有效已送达订单数。同日送达算准时。</dd><dt>送达天数</dt><dd>已送达有效记录中，实际送达时间减下单时间；未送达不记作零天。</dd><dt>服务距离</dt><dd>客户邮编代表坐标到最近候选点的球面距离；并非路网里程。</dd><dt>重点区域权重</dt><dd>只影响选址目标；方案回放依然按真实订单原始权重评分。</dd></dl><p class="panel-note">来源：<a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" rel="noreferrer">Olist 公开数据集</a> · CC BY-NC-SA 4.0</p></dialog>
+<script src="./data-service.js"></script>
+<script src="./app.js"></script></body></html>
